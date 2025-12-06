@@ -1,16 +1,40 @@
-import Link from 'next/link';
+import {
+  ComponentShowcase,
+  FeatureCards,
+  Footer,
+  HeroSection,
+  InstallCommand,
+  Philosophy,
+  TypeSafetyDemo,
+} from "@/components/home";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col justify-center text-center flex-1">
-      <h1 className="text-2xl font-bold mb-4">Hello World</h1>
-      <p>
-        You can open{' '}
-        <Link href="/docs" className="font-medium underline">
-          /docs
-        </Link>{' '}
-        and see the documentation.
-      </p>
-    </div>
+    <main className="flex flex-1 flex-col">
+      {/* Hero Section */}
+      <HeroSection />
+
+      {/* Install Command */}
+      <div className="-mt-8 pb-20 z-1">
+        <InstallCommand />
+      </div>
+
+      {/* Type Safety Demo */}
+      <section className="section-compact border-t border-border">
+        <TypeSafetyDemo />
+      </section>
+
+      {/* Features */}
+      <FeatureCards />
+
+      {/* Components */}
+      <ComponentShowcase />
+
+      {/* Philosophy */}
+      <Philosophy />
+
+      {/* Footer */}
+      <Footer />
+    </main>
   );
 }
