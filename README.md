@@ -1,45 +1,121 @@
-# typedora-ui
+# ✨ Typedora UI
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+> A Type-Safe Component Registry & Form Toolkit for Modern React Applications
 
-Run development server:
+Typedora UI is a next-generation extension layer for shadcn/ui, designed to bring full type-safety, schema-driven form components, and a flexible registry system to your UI stack.
+Whether you're building internal tools or large-scale applications, Typedora UI helps you ship faster with confidence.
+
+---
+
+## 🚀 Why Typedora UI?
+
+### 🔒 100% Type-Safe Components
+
+Strong types for every component — Select, RadioGroup, Combobox, Field wrappers, and more. No more `any`, no more guessing.
+
+### 🎨 Built on shadcn/ui
+
+All components follow the shadcn philosophy: beautiful primitives, fully customizable, no vendor lock-in.
+
+### 🧩 Registry-Driven Architecture
+
+Define, override, or extend UI components through a cohesive registry system. Perfect for design systems and multi-app environments.
+
+### 📐 Form-First by Design
+
+Typedora UI integrates cleanly with TanStack Form, Zod, or React Hook Form, offering a frictionless form development experience.
+
+### ⚡ Developer-Friendly API
+
+Minimal, predictable, composable. Designed for teams that care about maintainability.
+
+---
+
+## 📦 Installation
 
 ```bash
-npm run dev
+npm install typedora-ui
 # or
-pnpm dev
+pnpm add typedora-ui
 # or
-yarn dev
+yarn add typedora-ui
+# or
+bun add typedora-ui
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+Typedora UI requires React 18+ and a project already configured with shadcn/ui.
 
-## Explore
+---
 
-In the project, you can see:
+## ✨ Example: Type-Safe Select
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+```tsx
+import { TypedSelect } from "@/components/typedora-ui";
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+export function DemoSelect() {
+  return (
+    <TypedSelect
+      placeholder="Select fruit"
+      options={[
+        { label: "Apple", value: "apple" },
+        { label: "Banana", value: "banana" },
+        { label: "Orange", value: "orange" },
+      ]}
+      onChange={(value) => console.log("Selected:", value)}
+    />
+  );
+}
+```
 
-### Fumadocs MDX
+Strongly-typed from end to end — even your event handlers get the correct type.
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+---
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+## 🧱 Components
 
-## Learn More
+### Form-Ready, Typed Components
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
+- `TypedSelect`
+- `TypedRadioGroup`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+### Registry Core
+
+- JSON or TypeScript-driven registry configuration
+- Easy override / extend behavior
+
+### Utilities
+
+- Schema → UI component mapping
+- Field metadata helpers
+
+---
+
+## 📁 Project Structure
+
+```
+typedora-ui/
+└── package.json
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from developers who care about type-safety, clean architecture, and beautiful code.
+If you have ideas, improvements, or new typed components, feel free to open an Issue or a Pull Request.
+
+---
+
+## 📄 License
+
+MIT License — © 2025 Typedora UI Team.
+
+---
+
+## ❤️ Acknowledgements
+
+Typedora UI is built on top of exceptional open-source projects:
+
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Radix UI](https://www.radix-ui.com/)
+- [React](https://react.dev/)

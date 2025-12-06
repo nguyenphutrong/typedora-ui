@@ -1,0 +1,359 @@
+---
+title: TypedSelect
+description: A headless, type-safe select component with full TypeScript inference and customizable rendering.
+---
+
+## Introduction
+
+`TypedSelect` is a headless, type-safe wrapper around the base Select component. It provides full TypeScript inference for option values while giving you complete control over rendering through render props.
+
+**Key features:**
+
+- Full type-safety for `string`, `number`, and `boolean` values
+- Headless design with render props for complete customization
+- Support for grouped options
+- Controlled and uncontrolled usage
+
+## Installation
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+<Tab value="npm">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+<Tab value="pnpm">
+```bash
+pnpm dlx shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+<Tab value="yarn">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+<Tab value="bun">
+```bash
+bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+</Tabs>
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+<TypedSelect
+  options={[
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana" },
+    { label: "Orange", value: "orange" },
+  ]}
+  onChange={(value) => {
+    // value: string
+  }}
+/>
+```
+
+### Number Values
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+<TypedSelect
+  options={[
+    { label: "One", value: 1 },
+    { label: "Two", value: 2 },
+    { label: "Three", value: 3 },
+  ]}
+  onChange={(value) => {
+    // value: number
+  }}
+/>
+```
+
+### Boolean Values
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+<TypedSelect
+  options={[
+    { label: "Yes", value: true },
+    { label: "No", value: false },
+  ]}
+  onChange={(value) => {
+    // value: boolean
+  }}
+/>
+```
+
+### Custom Item rendering
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+<TypedSelect
+  placeholder="Select a plan"
+  options={[
+    { label: "Free", value: "free", description: "For personal use" },
+    { label: "Pro", value: "pro", description: "For professionals" },
+    { label: "Team", value: "team", description: "For small teams" },
+  ]}
+  renderItem={({ option, itemProps, Item }) => (
+    <Item {...itemProps} className="flex flex-col items-start py-2">
+      <span className="font-medium">{option.label}</span>
+      <span className="text-sm text-muted-foreground">
+        {option.description}
+      </span>
+    </Item>
+  )}
+/>
+```
+
+### Grouped Options
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+<TypedSelect
+  options={[
+    {
+      label: "Fruits",
+      options: [
+        { label: "Apple", value: "apple" },
+        { label: "Banana", value: "banana" },
+      ],
+    },
+    {
+      label: "Vegetables",
+      options: [
+        { label: "Carrot", value: "carrot" },
+        { label: "Broccoli", value: "broccoli" },
+      ],
+    },
+  ]}
+  onChange={(value) => {
+    // value: string | undefined
+    console.log(value);
+  }}
+/>
+```
+
+### Disabled Options
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+<TypedSelect
+  options={[
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana", disabled: true },
+    { label: "Orange", value: "orange" },
+  ]}
+/>
+```
+
+### Controlled Component
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+import { useState } from "react";
+
+const options = [
+  { label: "Apple", value: "apple" },
+  { label: "Banana", value: "banana" },
+] as const;
+
+function ControlledDemo() {
+  const [value, setValue] = useState<(typeof options)[number]["value"]>("apple");
+
+  return (
+    <div className="space-y-4">
+      <TypedSelect
+        value={value}
+        options={options}
+        onChange={setValue}
+      />
+      <p>Selected: {value}</p>
+    </div>
+  );
+}
+```
+
+### With Search Filter
+
+```tsx
+import { useState } from "react";
+import { TypedSelect } from "@/components/typed-select";
+import { Input } from "@/components/ui/input";
+
+export function SearchableSelect() {
+  const [search, setSearch] = useState("");
+
+  const allOptions = [
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana" },
+    { label: "Cherry", value: "cherry" },
+  ];
+
+  const filteredOptions = allOptions.filter((opt) =>
+    opt.label.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  return (
+    <TypedSelect
+      options={filteredOptions}
+      renderContent={({ children, Content }) => (
+        <Content
+          // Prevent Select from closing when clicking inside the search input
+          onPointerDownOutside={(e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("input")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <div className="p-2 border-b" onKeyDown={(e) => e.stopPropagation()}>
+            <Input
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              // Prevent focus management interference from Radix
+              onPointerDown={(e) => e.stopPropagation()}
+            />
+          </div>
+          {children}
+        </Content>
+      )}
+    />
+  );
+}
+```
+
+### Custom Keys (id/name)
+
+By default, `TypedSelect` uses `value` and `label` keys. You can customize this using `valueKey` and `labelKey` props:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { TypedSelect } from "@/components/typed-select";
+
+// Example data using id/name keys instead of value/label
+const users = [
+  { id: 1, name: "John Doe", email: "john@example.com" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com" },
+] as const;
+
+export function CustomKeysSelect() {
+  const [selectedId, setSelectedId] = useState<(typeof users)[number]["id"]>();
+
+  return (
+    <div className="space-y-4">
+      <TypedSelect
+        placeholder="Select a user"
+        options={users}
+        valueKey="id"
+        labelKey="name"
+        value={selectedId}
+        onChange={setSelectedId}
+        renderItem={({ option, itemProps, Item }) => (
+          <Item {...itemProps} className="flex flex-col items-start py-2">
+            <span className="font-medium">{option.name}</span>
+            <span className="text-sm text-muted-foreground">
+              {option.email}
+            </span>
+          </Item>
+        )}
+      />
+      {selectedId && (
+        <p className="text-sm text-muted-foreground">
+          Selected user ID: <strong>{selectedId}</strong>
+        </p>
+      )}
+    </div>
+  );
+}
+```
+
+## API Reference
+
+### TypedSelectProps
+
+| Prop | Type |
+| --- | --- |
+| `options` | `array` |
+| `valueKey?` | `TValueKey` |
+| `labelKey?` | `TLabelKey` |
+| `value?` | `ExtractOptionValue<TOption, TValueKey>` |
+| `defaultValue?` | `ExtractOptionValue<TOption, TValueKey>` |
+| `onChange?` | `function` |
+| `placeholder?` | `string` |
+| `renderTrigger?` | `function` |
+| `renderItem?` | `function` |
+| `renderGroup?` | `function` |
+| `renderContent?` | `function` |
+| `disabled?` | `boolean` |
+| `open?` | `boolean` |
+| `onOpenChange?` | `function` |
+| `name?` | `string` |
+| `required?` | `boolean` |
+
+### SelectOption
+
+| Prop | Type |
+| --- | --- |
+| `value` | `T` |
+| `label` | `string` |
+| `disabled?` | `boolean` |
+
+### SelectOptionGroup
+
+| Prop | Type |
+| --- | --- |
+| `label` | `string` |
+| `options` | `array` |
+
+### SelectTriggerRenderProps
+
+| Prop | Type |
+| --- | --- |
+| `selectedOption` | `TOption \| undefined` |
+| `placeholder` | `string` |
+| `open` | `boolean` |
+| `disabled` | `boolean` |
+| `Trigger` | `function` |
+| `Value` | `function` |
+
+### SelectItemRenderProps
+
+| Prop | Type |
+| --- | --- |
+| `option` | `TOption` |
+| `isSelected` | `boolean` |
+| `isDisabled` | `boolean` |
+| `group` | `SelectOptionGroup<TOption> \| undefined` |
+| `itemProps` | `object` |
+| `Item` | `function` |
+
+### SelectGroupRenderProps
+
+| Prop | Type |
+| --- | --- |
+| `group` | `SelectOptionGroup<TOption>` |
+| `children` | `ReactNode` |
+| `Group` | `function` |
+| `Label` | `function` |
+
+### SelectContentRenderProps
+
+| Prop | Type |
+| --- | --- |
+| `children` | `ReactNode` |
+| `Content` | `function` |

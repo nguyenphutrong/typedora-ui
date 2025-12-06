@@ -1,0 +1,296 @@
+---
+title: TypedRadioGroup
+description: A headless, type-safe radio group component with full TypeScript inference and customizable rendering.
+---
+
+## Introduction
+
+`TypedRadioGroup` is a headless, type-safe wrapper around the base RadioGroup component. It provides full TypeScript inference for option values while giving you complete control over rendering through render props.
+
+**Key features:**
+
+- Full type-safety for `string`, `number`, and `boolean` values
+- Headless design with render props for complete customization
+- Accessible by default (keyboard navigation, ARIA)
+- Controlled and uncontrolled usage
+
+## Installation
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+<Tab value="npm">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-radio-group.json
+```
+</Tab>
+<Tab value="pnpm">
+```bash
+pnpm dlx shadcn@latest add https://typedora-ui.netlify.app/r/typed-radio-group.json
+```
+</Tab>
+<Tab value="yarn">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-radio-group.json
+```
+</Tab>
+<Tab value="bun">
+```bash
+bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-radio-group.json
+```
+</Tab>
+</Tabs>
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+
+<TypedRadioGroup
+  options={[
+    { label: "Apple", value: "apple" },
+    { label: "Banana", value: "banana" },
+    { label: "Orange", value: "orange" },
+  ]}
+  onChange={(value) => {
+    // value: string
+  }}
+/>
+```
+
+### Number Values
+
+```tsx
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+
+<TypedRadioGroup
+  options={[
+    { label: "Small", value: 1 },
+    { label: "Medium", value: 2 },
+    { label: "Large", value: 3 },
+  ]}
+  onChange={(value) => {
+    // value: number
+  }}
+/>
+```
+
+### Boolean Values
+
+```tsx
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+
+<TypedRadioGroup
+  options={[
+    { label: "Yes", value: true },
+    { label: "No", value: false },
+  ]}
+  onChange={(value) => {
+    // value: boolean
+  }}
+/>
+```
+
+### Card Style
+
+```tsx
+import { CheckIcon } from "lucide-react";
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+import { cn } from "@/lib/utils";
+
+export function CardStyleRadioGroup() {
+  return (
+    <div className="not-prose">
+      <TypedRadioGroup
+        defaultValue="free"
+        className="grid grid-cols-3 gap-4"
+        options={[
+          { value: "free", label: "Free", description: "Basic features" },
+          { value: "pro", label: "Pro", description: "Advanced features" },
+          { value: "team", label: "Team", description: "For teams" },
+        ]}
+        renderItem={({ option, isSelected, itemProps, Item }) => (
+          <label
+            htmlFor={itemProps.id}
+            className={cn(
+              "relative flex flex-col p-4 border rounded-lg cursor-pointer",
+              isSelected ? "border-primary bg-primary/5" : "border-border",
+            )}
+          >
+            <Item {...itemProps} className="sr-only" />
+            {isSelected && (
+              <CheckIcon className="absolute top-3 right-3 size-4 text-primary" />
+            )}
+            <div className="grid grow gap-2">
+              <p className="font-semibold">{option.label}</p>
+              <p
+                className="text-muted-foreground text-xs"
+                id={`${itemProps.id}-description`}
+              >
+                {option.description}
+              </p>
+            </div>
+          </label>
+        )}
+      />
+    </div>
+  );
+}
+```
+
+### Custom Keys (id/name)
+
+By default, `TypedRadioGroup` uses `value` and `label` keys. You can customize this using `valueKey` and `labelKey` props:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+import { Label } from "@/components/ui/label";
+
+// Example data using id/name keys instead of value/label
+const roles = [
+  {
+    id: "admin",
+    name: "Administrator",
+    description: "Full access to all features",
+  },
+  { id: "editor", name: "Editor", description: "Can edit content" },
+  { id: "viewer", name: "Viewer", description: "Read-only access" },
+] as const;
+
+export function CustomKeysRadioGroup() {
+  const [selectedId, setSelectedId] = useState<(typeof roles)[number]["id"]>();
+
+  return (
+    <div className="space-y-4">
+      <Label>Select Role</Label>
+      <TypedRadioGroup
+        options={roles}
+        valueKey="id"
+        labelKey="name"
+        value={selectedId}
+        onChange={setSelectedId}
+        renderItem={({ option, itemProps, Item, Indicator }) => (
+          <label
+            htmlFor={itemProps.id}
+            className="flex items-start gap-3 cursor-pointer p-3 rounded-lg border hover:bg-accent"
+          >
+            <Item {...itemProps} className="mt-1">
+              <Indicator />
+            </Item>
+            <div className="flex flex-col">
+              <span className="font-medium">{option.name}</span>
+              <span className="text-sm text-muted-foreground">
+                {option.description}
+              </span>
+            </div>
+          </label>
+        )}
+      />
+      {selectedId && (
+        <p className="text-sm text-muted-foreground">
+          Selected role: <strong>{selectedId}</strong>
+        </p>
+      )}
+    </div>
+  );
+}
+```
+
+### Disabled Options
+
+```tsx
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+
+<TypedRadioGroup
+  options={[
+    { label: "Available", value: "available" },
+    { label: "Coming Soon", value: "coming-soon", disabled: true },
+    { label: "Premium", value: "premium" },
+  ]}
+/>
+```
+
+### Controlled Component
+
+```tsx
+import { TypedRadioGroup } from "@/components/typed-radio-group";
+import { useState } from "react";
+
+function ControlledDemo() {
+  const [value, setValue] = useState<"apple" | "banana">("apple");
+
+  return (
+    <div className="space-y-4">
+      <TypedRadioGroup
+        value={value}
+        options={[
+          { label: "Apple", value: "apple" },
+          { label: "Banana", value: "banana" },
+        ]}
+        onChange={setValue}
+      />
+      <p>Selected: {value}</p>
+    </div>
+  );
+}
+```
+
+## API Reference
+
+### TypedRadioGroupProps
+
+| Prop | Type |
+| --- | --- |
+| `options` | `array` |
+| `valueKey?` | `TValueKey` |
+| `labelKey?` | `TLabelKey` |
+| `value?` | `ExtractOptionValue<TOption, TValueKey>` |
+| `defaultValue?` | `ExtractOptionValue<TOption, TValueKey>` |
+| `onChange?` | `function` |
+| `renderItem?` | `function` |
+| `renderGroup?` | `function` |
+| `className?` | `string` |
+| `disabled?` | `boolean` |
+| `name?` | `string` |
+| `required?` | `boolean` |
+| `orientation?` | `"vertical" \| "horizontal"` |
+| `loop?` | `boolean` |
+
+### RadioOption
+
+| Prop | Type |
+| --- | --- |
+| `value` | `T` |
+| `label` | `string` |
+| `disabled?` | `boolean` |
+
+### RadioItemRenderProps
+
+| Prop | Type |
+| --- | --- |
+| `option` | `TOption` |
+| `isSelected` | `boolean` |
+| `isDisabled` | `boolean` |
+| `itemProps` | `object` |
+| `Item` | `function` |
+| `Indicator` | `function` |
+
+### RadioGroupRenderProps
+
+| Prop | Type |
+| --- | --- |
+| `children` | `ReactNode` |
+
+## Keyboard Interactions
+
+| Key | Description |
+| --- | --- |
+| `Tab` | Moves focus to the checked radio item or first item |
+| `Space` | Checks the focused radio item |
+| `ArrowDown` | Moves focus and checks the next item |
+| `ArrowRight` | Moves focus and checks the next item |
+| `ArrowUp` | Moves focus and checks the previous item |
+| `ArrowLeft` | Moves focus and checks the previous item |

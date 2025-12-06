@@ -1,13 +1,89 @@
 ---
-title: Hello World
-description: Your first document
+title: Getting Started
+description: Learn how to add type-safe components to your React project.
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+## Introduction
 
-## What is Next?
+**Typedora UI** is a next-generation extension layer for shadcn/ui, designed to bring full type-safety to your UI components.
+
+<Callout title="Why Type-Safety Matters">
+Type-safe components catch errors at compile time, provide better autocomplete, and make refactoring safer. No more `any` types or runtime surprises.
+</Callout>
+
+## Quick Start
+
+Install a component using the shadcn CLI:
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+<Tab value="npm">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+<Tab value="pnpm">
+```bash
+pnpm dlx shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+<Tab value="yarn">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+<Tab value="bun">
+```bash
+bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
+```
+</Tab>
+</Tabs>
+
+## Example
+
+```tsx
+import { TypedSelect } from "@/components/typed-select";
+
+const fruits = [
+  { value: "apple", label: "Apple" },
+  { value: "banana", label: "Banana" },
+  { value: "orange", label: "Orange" },
+] as const;
+
+<TypedSelect
+  options={fruits}
+  onChange={(value) => {
+    // value is typed as "apple" | "banana" | "orange"
+    console.log(value);
+  }}
+/>
+```
+
+## Available Components
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card
+    title="TypedSelect"
+    description="Type-safe select with grouped options and custom rendering."
+    href="/docs/components/typed-select"
+  />
+  <Card
+    title="TypedRadioGroup"
+    description="Headless radio group with render props for complete customization."
+    href="/docs/components/typed-radio-group"
+  />
 </Cards>
+
+## Requirements
+
+- React 18+
+- A project configured with [shadcn/ui](https://ui.shadcn.com/docs/installation)
+- TypeScript (recommended)
+
+## Philosophy
+
+Typedora UI follows these principles:
+
+1. **Type-Safety First** — Every component provides full TypeScript inference
+2. **Headless by Design** — Use render props for complete control over rendering
+3. **shadcn Compatible** — Drop-in replacements that work with your existing setup
+4. **Zero Lock-in** — Copy the source code, own your components

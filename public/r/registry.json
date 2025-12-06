@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "typedora-ui",
+  "homepage": "https://typedora-ui.netlify.app",
+  "items": [
+    {
+      "name": "typed-select",
+      "type": "registry:component",
+      "title": "TypedSelect",
+      "description": "A headless, type-safe select component with full TypeScript inference and customizable rendering.",
+      "registryDependencies": ["select"],
+      "files": [
+        {
+          "path": "registry/default/typed-select/typed-select.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "typed-radio-group",
+      "type": "registry:component",
+      "title": "TypedRadioGroup",
+      "description": "A headless, type-safe radio group component with full TypeScript inference and customizable rendering.",
+      "registryDependencies": ["radio-group"],
+      "files": [
+        {
+          "path": "registry/default/typed-radio-group/typed-radio-group.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}
