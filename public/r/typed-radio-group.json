@@ -4,9 +4,7 @@
   "type": "registry:component",
   "title": "TypedRadioGroup",
   "description": "A headless, type-safe radio group component with full TypeScript inference and customizable rendering.",
-  "registryDependencies": [
-    "radio-group"
-  ],
+  "registryDependencies": ["radio-group"],
   "files": [
     {
       "path": "registry/default/typed-radio-group/typed-radio-group.tsx",

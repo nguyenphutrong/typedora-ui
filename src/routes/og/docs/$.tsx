@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { source } from "@/lib/source";
 import { ImageResponse } from "@vercel/og";
+import { source } from "@/lib/source";
 
 export const Route = createFileRoute("/og/docs/$")({
   server: {

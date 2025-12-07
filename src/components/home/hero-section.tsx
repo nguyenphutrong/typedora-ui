@@ -1,6 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import { Link } from "@tanstack/react-router";
 import { easeOutExpo } from "./motion";
 
 export function HeroSection() {

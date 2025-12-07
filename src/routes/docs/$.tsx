@@ -1,24 +1,24 @@
-import { createFileRoute, notFound } from '@tanstack/react-router';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { createServerFn } from '@tanstack/react-start';
-import { source } from '@/lib/source';
-import type * as PageTree from 'fumadocs-core/page-tree';
-import { useMemo } from 'react';
-import browserCollections from 'fumadocs-mdx:collections/browser';
+import browserCollections from "fumadocs-mdx:collections/browser";
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { staticFunctionMiddleware } from "@tanstack/start-static-server-functions";
+import type * as PageTree from "fumadocs-core/page-tree";
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
-} from 'fumadocs-ui/layouts/docs/page';
-import { baseOptions } from '@/lib/layout.shared';
-import { staticFunctionMiddleware } from '@tanstack/start-static-server-functions';
-import { getMDXComponents } from '@/mdx-components';
+} from "fumadocs-ui/layouts/docs/page";
+import { useMemo } from "react";
+import { baseOptions } from "@/lib/layout.shared";
+import { source } from "@/lib/source";
+import { getMDXComponents } from "@/mdx-components";
 
-export const Route = createFileRoute('/docs/$')({
+export const Route = createFileRoute("/docs/$")({
   component: Page,
   loader: async ({ params }) => {
-    const slugs = params._splat?.split('/') ?? [];
+    const slugs = params._splat?.split("/") ?? [];
     const data = await loader({ data: slugs });
     await clientLoader.preload(data.path);
     return data;
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/docs/$')({
 });
 
 const loader = createServerFn({
-  method: 'GET',
+  method: "GET",
 })
   .inputValidator((slugs: string[]) => slugs)
   .middleware([staticFunctionMiddleware])
@@ -47,9 +47,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         <DocsTitle>{frontmatter.title}</DocsTitle>
         <DocsDescription>{frontmatter.description}</DocsDescription>
         <DocsBody>
-          <MDX
-            components={getMDXComponents()}
-          />
+          <MDX components={getMDXComponents()} />
         </DocsBody>
       </DocsPage>
     );
@@ -73,7 +71,7 @@ function Page() {
 
 function transformPageTree(root: PageTree.Root): PageTree.Root {
   function mapNode<T extends PageTree.Node>(item: T): T {
-    if (typeof item.icon === 'string') {
+    if (typeof item.icon === "string") {
       item = {
         ...item,
         icon: (
@@ -86,7 +84,7 @@ function transformPageTree(root: PageTree.Root): PageTree.Root {
       };
     }
 
-    if (item.type === 'folder') {
+    if (item.type === "folder") {
       return {
         ...item,
         index: item.index ? mapNode(item.index) : undefined,

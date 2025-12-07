@@ -1,6 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import { Link } from "@tanstack/react-router";
 import { EXTERNAL_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { easeOutExpo } from "./motion";
 

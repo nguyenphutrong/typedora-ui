@@ -4,9 +4,7 @@
   "type": "registry:component",
   "title": "TypedSelect",
   "description": "A headless, type-safe select component with full TypeScript inference and customizable rendering.",
-  "registryDependencies": [
-    "select"
-  ],
+  "registryDependencies": ["select"],
   "files": [
     {
       "path": "registry/default/typed-select/typed-select.tsx",
