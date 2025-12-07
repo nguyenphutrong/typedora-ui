@@ -1,7 +1,6 @@
-"use client";
-
 import { BookOpen, Code2, Copy, Layers } from "lucide-react";
 import { motion } from "motion/react";
+import { easeOutExpo } from "./motion";
 
 const principles = [
   {
@@ -25,8 +24,6 @@ const principles = [
     description: "Copy the source code, own your components",
   },
 ];
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const containerVariants = {
   hidden: { opacity: 0 },

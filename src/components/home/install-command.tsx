@@ -1,9 +1,8 @@
-"use client";
-
 import { Check, ChevronDown, Copy } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { REGISTRY_CONFIG } from "@/lib/constants";
+import { easeOutExpo } from "./motion";
 
 const components = [
   { name: "typed-select", label: "TypedSelect" },
@@ -30,8 +29,6 @@ const getInstallCommand = (pm: string, component: ComponentName) => {
 
 const packageManagers = ["npm", "pnpm", "yarn", "bun"] as const;
 type PackageManager = (typeof packageManagers)[number];
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export function InstallCommand() {
   const [activeTab, setActiveTab] = useState<PackageManager>("npm");

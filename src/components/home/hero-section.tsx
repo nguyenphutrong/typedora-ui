@@ -1,10 +1,7 @@
-"use client";
-
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import Link from "next/link";
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { Link } from "@tanstack/react-router";
+import { easeOutExpo } from "./motion";
 
 export function HeroSection() {
   return (
@@ -79,14 +76,16 @@ export function HeroSection() {
           className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Link
-            href="/docs"
+            to="/docs/$"
+            params={{ _splat: "" }}
             className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 font-medium text-primary-foreground transition-all hover:scale-[1.02] hover:opacity-90 active:scale-[0.98]"
           >
             Get Started
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
-            href="/docs/components/typed-select"
+            to="/docs/$"
+            params={{ _splat: "components/typed-select" }}
             className="inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-secondary/50 px-6 font-medium transition-all hover:scale-[1.02] hover:bg-secondary active:scale-[0.98]"
           >
             View Components

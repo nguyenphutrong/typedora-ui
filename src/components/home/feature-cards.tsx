@@ -1,7 +1,6 @@
-"use client";
-
 import { Code2, Gauge, Puzzle, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import { easeOutExpo } from "./motion";
 
 const features = [
   {
@@ -29,8 +28,6 @@ const features = [
       "No dependencies to worry about. Copy the source code and customize it to your needs.",
   },
 ];
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const containerVariants = {
   hidden: { opacity: 0 },

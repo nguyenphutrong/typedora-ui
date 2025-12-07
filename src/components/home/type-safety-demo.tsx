@@ -1,10 +1,7 @@
-"use client";
-
 import { AlertTriangle, Check, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { easeOutExpo } from "./motion";
 
 const containerVariants = {
   hidden: { opacity: 0 },

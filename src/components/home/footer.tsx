@@ -1,11 +1,8 @@
-"use client";
-
 import { Sparkles } from "lucide-react";
 import { motion } from "motion/react";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { EXTERNAL_LINKS, SITE_CONFIG } from "@/lib/constants";
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
+import { easeOutExpo } from "./motion";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -43,20 +40,21 @@ export function Footer() {
           {/* Links */}
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <Link
-              href="/docs"
+              to="/docs/$"
+              params={{ _splat: "" }}
               className="transition-colors hover:text-foreground"
             >
               Documentation
             </Link>
-            <Link
+            <a
               href={EXTERNAL_LINKS.shadcnUi}
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"
             >
               shadcn/ui
-            </Link>
-            <Link
+            </a>
+            <a
               href={EXTERNAL_LINKS.github}
               target="_blank"
               rel="noopener noreferrer"
@@ -64,7 +62,7 @@ export function Footer() {
             >
               <GithubIcon className="h-4 w-4" />
               GitHub
-            </Link>
+            </a>
           </div>
         </div>
 

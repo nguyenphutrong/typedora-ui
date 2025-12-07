@@ -1,22 +1,21 @@
-"use client";
-
 import { ArrowRight, List, Plus, ToggleRight } from "lucide-react";
 import { motion } from "motion/react";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
+import { easeOutExpo } from "./motion";
 
 const components = [
   {
     name: "TypedSelect",
     description: "Type-safe select with grouped options and custom rendering.",
     icon: List,
-    href: "/docs/components/typed-select",
+    slug: "components/typed-select",
     features: ["Full inference", "Grouped options", "Custom render"],
   },
   {
     name: "TypedRadioGroup",
     description: "Headless radio group with render props for complete control.",
     icon: ToggleRight,
-    href: "/docs/components/typed-radio-group",
+    slug: "components/typed-radio-group",
     features: ["Render props", "Headless design", "Accessible"],
   },
 ];
@@ -27,8 +26,6 @@ const upcomingComponents = [
   "TypedTabs",
   "TypedToggleGroup",
 ];
-
-const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -80,7 +77,8 @@ export function ComponentShowcase() {
           {components.map((component) => (
             <motion.div key={component.name} variants={itemVariants}>
               <Link
-                href={component.href}
+                to="/docs/$"
+                params={{ _splat: component.slug }}
                 className="group relative block h-full overflow-hidden rounded-2xl border border-border bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-lg"
               >
                 {/* Icon */}
