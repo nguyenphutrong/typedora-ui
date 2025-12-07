@@ -40,7 +40,7 @@ bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
 
 ## Example
 
-```tsx
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 const fruits = [
@@ -52,8 +52,7 @@ const fruits = [
 <TypedSelect
   options={fruits}
   onValueChange={(value) => {
-    // value is typed as "apple" | "banana" | "orange"
-    console.log(value);
+    //            ^?
   }}
 />
 ```
@@ -65,6 +64,11 @@ const fruits = [
     title="TypedSelect"
     description="Type-safe select with grouped options and custom rendering."
     href="/docs/components/typed-select"
+  />
+  <Card
+    title="TypedCombobox"
+    description="Type-safe combobox with search, grouped options, and custom rendering."
+    href="/docs/components/typed-combobox"
   />
   <Card
     title="TypedRadioGroup"

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, List, Plus, ToggleRight } from "lucide-react";
+import { ArrowRight, List, Plus, Search, ToggleRight } from "lucide-react";
 import { motion } from "motion/react";
 import { easeOutExpo } from "./motion";
 
@@ -12,6 +12,13 @@ const components = [
     features: ["Full inference", "Grouped options", "Custom render"],
   },
   {
+    name: "TypedCombobox",
+    description: "Type-safe combobox with search and custom rendering.",
+    icon: Search,
+    slug: "components/typed-combobox",
+    features: ["Search/filter", "Grouped options", "Custom render"],
+  },
+  {
     name: "TypedRadioGroup",
     description: "Headless radio group with render props for complete control.",
     icon: ToggleRight,
@@ -21,7 +28,6 @@ const components = [
 ];
 
 const upcomingComponents = [
-  "TypedCombobox",
   "TypedCheckboxGroup",
   "TypedTabs",
   "TypedToggleGroup",

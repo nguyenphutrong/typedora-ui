@@ -46,6 +46,24 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "typed-combobox",
+      "type": "registry:component",
+      "title": "TypedCombobox",
+      "description": "A headless, type-safe combobox component with search functionality, full TypeScript inference, and customizable rendering.",
+      "registryDependencies": [
+        "button",
+        "command",
+        "popover",
+        "https://typedora-ui.netlify.app/r/typed-utils.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/typed-combobox/typed-combobox.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
