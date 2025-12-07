@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 import {
@@ -110,46 +112,67 @@ export type SelectContentRenderProps = {
 };
 
 /**
- * Extract the value type from an option based on the valueKey
+ * Extract the inner option type from options array.
+ * Handles both flat options and grouped options.
+ */
+type ExtractOption<TOptions> = TOptions extends readonly (infer T)[]
+  ? T extends { options: readonly (infer O)[] }
+    ? O
+    : T
+  : never;
+
+/**
+ * Extract the value type from options based on the valueKey.
+ * Handles both flat options and grouped options.
  */
 type ExtractOptionValue<
-  TOption,
-  TValueKey extends keyof TOption,
-> = TOption[TValueKey];
+  TOptions,
+  TValueKey extends string,
+> = ExtractOption<TOptions> extends infer O
+  ? O extends Record<string, unknown>
+    ? TValueKey extends keyof O
+      ? O[TValueKey] & {}
+      : never
+    : never
+  : never;
 
 /**
  * Core props for TypedSelect (for documentation).
  * The actual component also accepts all Select props.
  */
 export interface TypedSelectBaseProps<
-  TOption extends Record<string, unknown>,
-  TValueKey extends keyof TOption = "value" extends keyof TOption
-    ? "value"
-    : keyof TOption,
-  TLabelKey extends keyof TOption = "label" extends keyof TOption
-    ? "label"
-    : keyof TOption,
+  TOptions extends
+    | readonly Record<string, unknown>[]
+    | readonly SelectOptionGroup<Record<string, unknown>>[],
+  TValueKey extends string = "value",
+  TLabelKey extends string = "label",
 > {
   /** Array of options or grouped options */
-  options: readonly TOption[] | readonly SelectOptionGroup<TOption>[];
+  options: TOptions;
   /** The key to use for the option value (default: "value") */
   valueKey?: TValueKey;
   /** The key to use for the option label (default: "label") */
   labelKey?: TLabelKey;
   /** Controlled value */
-  value?: ExtractOptionValue<TOption, TValueKey>;
+  value?: ExtractOptionValue<TOptions, TValueKey>;
   /** Default value for uncontrolled usage */
-  defaultValue?: ExtractOptionValue<TOption, TValueKey>;
+  defaultValue?: ExtractOptionValue<TOptions, TValueKey>;
   /** Callback when value changes - receives the typed value */
-  onChange?: (value: ExtractOptionValue<TOption, TValueKey>) => void;
+  onChange?: (value: ExtractOptionValue<TOptions, TValueKey>) => void;
   /** Placeholder text (passed to renderTrigger) */
   placeholder?: string;
   /** Custom render for trigger */
-  renderTrigger?: (props: SelectTriggerRenderProps<TOption>) => React.ReactNode;
+  renderTrigger?: (
+    props: SelectTriggerRenderProps<ExtractOption<TOptions>>,
+  ) => React.ReactNode;
   /** Custom render for each item */
-  renderItem?: (props: SelectItemRenderProps<TOption>) => React.ReactNode;
+  renderItem?: (
+    props: SelectItemRenderProps<ExtractOption<TOptions>>,
+  ) => React.ReactNode;
   /** Custom render for each group (required when using grouped options) */
-  renderGroup?: (props: SelectGroupRenderProps<TOption>) => React.ReactNode;
+  renderGroup?: (
+    props: SelectGroupRenderProps<ExtractOption<TOptions>>,
+  ) => React.ReactNode;
   /** Custom render for content wrapper */
   renderContent?: (props: SelectContentRenderProps) => React.ReactNode;
   /** Whether the select is disabled */
@@ -166,23 +189,21 @@ export interface TypedSelectBaseProps<
 
 /**
  * Props for the TypedSelect component.
- * @template TOption - The full option type including custom properties
+ * @template TOptions - The options array type
  * @template TValueKey - The key used for the value property (default: "value")
  * @template TLabelKey - The key used for the label property (default: "label")
  */
 export interface TypedSelectProps<
-  TOption extends Record<string, unknown>,
-  TValueKey extends keyof TOption = "value" extends keyof TOption
-    ? "value"
-    : keyof TOption,
-  TLabelKey extends keyof TOption = "label" extends keyof TOption
-    ? "label"
-    : keyof TOption,
+  TOptions extends
+    | readonly Record<string, unknown>[]
+    | readonly SelectOptionGroup<Record<string, unknown>>[],
+  TValueKey extends string = "value",
+  TLabelKey extends string = "label",
 > extends Omit<
       React.ComponentProps<typeof Select>,
       "value" | "defaultValue" | "onValueChange" | "children"
     >,
-    TypedSelectBaseProps<TOption, TValueKey, TLabelKey> {}
+    TypedSelectBaseProps<TOptions, TValueKey, TLabelKey> {}
 
 // =============================================================================
 // Helpers
@@ -338,13 +359,11 @@ function defaultRenderContent({
  * ```
  */
 function TypedSelect<
-  TOption extends Record<string, unknown>,
-  TValueKey extends keyof TOption = "value" extends keyof TOption
-    ? "value"
-    : keyof TOption,
-  TLabelKey extends keyof TOption = "label" extends keyof TOption
-    ? "label"
-    : keyof TOption,
+  TOptions extends
+    | readonly Record<string, unknown>[]
+    | readonly SelectOptionGroup<Record<string, unknown>>[],
+  TValueKey extends string = "value",
+  TLabelKey extends string = "label",
 >({
   options,
   valueKey = "value" as TValueKey,
@@ -361,15 +380,19 @@ function TypedSelect<
   renderGroup,
   renderContent = defaultRenderContent,
   ...props
-}: TypedSelectProps<TOption, TValueKey, TLabelKey>) {
+}: TypedSelectProps<TOptions, TValueKey, TLabelKey>) {
+  // Extract the actual option type for internal use
+  type TOption = ExtractOption<TOptions> & Record<string, unknown>;
+  type TValue = ExtractOptionValue<TOptions, TValueKey>;
+
   // Track open state internally
   const [internalOpen, setInternalOpen] = React.useState(false);
   const open = controlledOpen ?? internalOpen;
 
   // Track internal value for uncontrolled mode
-  const [internalValue, setInternalValue] = React.useState<
-    ExtractOptionValue<TOption, TValueKey> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = React.useState<TValue | undefined>(
+    defaultValue,
+  );
 
   // Use controlled value if provided, otherwise use internal state
   const currentValue = value !== undefined ? value : internalValue;
@@ -380,19 +403,27 @@ function TypedSelect<
   };
 
   const handleValueChange = (serialized: string) => {
-    const deserialized = deserializeValue(serialized, options, valueKey);
+    const deserialized = deserializeValue(
+      serialized,
+      options as readonly TOption[] | readonly SelectOptionGroup<TOption>[],
+      valueKey as keyof TOption,
+    );
 
     // Update internal state for uncontrolled mode
     if (value === undefined) {
-      setInternalValue(deserialized as ExtractOptionValue<TOption, TValueKey>);
+      setInternalValue(deserialized as TValue);
     }
 
     if (onChange) {
-      onChange(deserialized as ExtractOptionValue<TOption, TValueKey>);
+      onChange(deserialized as TValue);
     }
   };
 
-  const selectedOption = findSelectedOption(currentValue, options, valueKey);
+  const selectedOption = findSelectedOption(
+    currentValue as TOption[keyof TOption] | undefined,
+    options as readonly TOption[] | readonly SelectOptionGroup<TOption>[],
+    valueKey as keyof TOption,
+  );
   const serializedValue =
     currentValue !== undefined
       ? serializeValue(currentValue as SelectValueType)
@@ -404,14 +435,15 @@ function TypedSelect<
 
   // Use provided renderItem or create default with labelKey
   const actualRenderItem =
-    renderItem ?? createDefaultRenderItem<TOption, TLabelKey>(labelKey);
+    renderItem ??
+    createDefaultRenderItem<TOption, keyof TOption>(labelKey as keyof TOption);
 
   // Render a single item
   const renderSingleItem = (
     option: TOption,
     group: SelectOptionGroup<TOption> | undefined,
   ) => {
-    const optionValue = option[valueKey] as SelectValueType;
+    const optionValue = option[valueKey as keyof TOption] as SelectValueType;
     const serialized = serializeValue(optionValue);
     const isSelected = serializedValue === serialized;
     const isDisabled = (option as { disabled?: boolean }).disabled ?? false;
@@ -435,8 +467,12 @@ function TypedSelect<
 
   // Render all items (grouped or flat)
   const renderItems = () => {
-    if (isGroupedOptions(options)) {
-      return options.map((group) => {
+    const opts = options as
+      | readonly TOption[]
+      | readonly SelectOptionGroup<TOption>[];
+
+    if (isGroupedOptions(opts)) {
+      return opts.map((group) => {
         const groupChildren = group.options.map((option) =>
           renderSingleItem(option, group),
         );
@@ -445,7 +481,7 @@ function TypedSelect<
           return (
             <React.Fragment key={group.label}>
               {renderGroup({
-                group,
+                group: group as SelectOptionGroup<ExtractOption<TOptions>>,
                 children: groupChildren,
                 Group: SelectGroup,
                 Label: SelectLabel,
@@ -464,7 +500,9 @@ function TypedSelect<
       });
     }
 
-    return options.map((option) => renderSingleItem(option, undefined));
+    return (opts as readonly TOption[]).map((option) =>
+      renderSingleItem(option, undefined),
+    );
   };
 
   return (
@@ -478,7 +516,7 @@ function TypedSelect<
       {...props}
     >
       {renderTrigger({
-        selectedOption,
+        selectedOption: selectedOption as ExtractOption<TOptions> | undefined,
         placeholder,
         open,
         disabled,

@@ -43,7 +43,10 @@ bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-select.json
 
 ### Basic Usage
 
-```tsx
+
+<Tabs items={['Code', 'Preview']}>
+  <Tab value="Code">
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 <TypedSelect
@@ -51,16 +54,29 @@ import { TypedSelect } from "@/components/typed-select";
     { label: "Apple", value: "apple" },
     { label: "Banana", value: "banana" },
     { label: "Orange", value: "orange" },
-  ]}
+  ] as const}
   onChange={(value) => {
-    // value: string
+    //       ^?
   }}
 />
 ```
+  </Tab>
+  <Tab value="Preview">
+    <TypedSelect
+      options={[
+        { label: "Apple", value: "apple" },
+        { label: "Banana", value: "banana" },
+        { label: "Orange", value: "orange" },
+      ]}
+    />
+  </Tab>
+</Tabs>
+
+
 
 ### Number Values
 
-```tsx
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 <TypedSelect
@@ -68,16 +84,16 @@ import { TypedSelect } from "@/components/typed-select";
     { label: "One", value: 1 },
     { label: "Two", value: 2 },
     { label: "Three", value: 3 },
-  ]}
+  ] as const}
   onChange={(value) => {
-    // value: number
+    //       ^?
   }}
 />
 ```
 
 ### Boolean Values
 
-```tsx
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 <TypedSelect
@@ -86,14 +102,14 @@ import { TypedSelect } from "@/components/typed-select";
     { label: "No", value: false },
   ]}
   onChange={(value) => {
-    // value: boolean
+    //       ^?
   }}
 />
 ```
 
 ### Custom Item rendering
 
-```tsx
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 <TypedSelect
@@ -116,7 +132,7 @@ import { TypedSelect } from "@/components/typed-select";
 
 ### Grouped Options
 
-```tsx
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 <TypedSelect
@@ -135,17 +151,16 @@ import { TypedSelect } from "@/components/typed-select";
         { label: "Broccoli", value: "broccoli" },
       ],
     },
-  ]}
+  ] as const}
   onChange={(value) => {
-    // value: string | undefined
-    console.log(value);
+    //       ^?
   }}
 />
 ```
 
 ### Disabled Options
 
-```tsx
+```tsx twoslash
 import { TypedSelect } from "@/components/typed-select";
 
 <TypedSelect
@@ -159,23 +174,33 @@ import { TypedSelect } from "@/components/typed-select";
 
 ### Controlled Component
 
-```tsx
+```tsx twoslash
+'use client';
+
 import { TypedSelect } from "@/components/typed-select";
 import { useState } from "react";
 
-const options = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-] as const;
+type User = {
+  id: string;
+  name: string;
+};
+
+const users: User[] = [
+  { id: "1", name: "Alice" },
+  { id: "2", name: "Bob" },
+  { id: "3", name: "Charlie" },
+];
 
 function ControlledDemo() {
-  const [value, setValue] = useState<(typeof options)[number]["value"]>("apple");
+  const [value, setValue] = useState<User['id']>(users[0].id);
 
   return (
     <div className="space-y-4">
       <TypedSelect
         value={value}
-        options={options}
+        options={users}
+        valueKey="id"
+        labelKey="name"
         onChange={setValue}
       />
       <p>Selected: {value}</p>
@@ -186,7 +211,9 @@ function ControlledDemo() {
 
 ### With Search Filter
 
-```tsx
+```tsx twoslash
+'use client';
+
 import { useState } from "react";
 import { TypedSelect } from "@/components/typed-select";
 import { Input } from "@/components/ui/input";
@@ -245,14 +272,21 @@ import { useState } from "react";
 import { TypedSelect } from "@/components/typed-select";
 
 // Example data using id/name keys instead of value/label
-const users = [
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+const users: User[] = [
   { id: 1, name: "John Doe", email: "john@example.com" },
   { id: 2, name: "Jane Smith", email: "jane@example.com" },
   { id: 3, name: "Bob Johnson", email: "bob@example.com" },
-] as const;
+];
 
 export function CustomKeysSelect() {
-  const [selectedId, setSelectedId] = useState<(typeof users)[number]["id"]>();
+  const [selectedId, setSelectedId] = useState<User['id']>();
 
   return (
     <div className="space-y-4">

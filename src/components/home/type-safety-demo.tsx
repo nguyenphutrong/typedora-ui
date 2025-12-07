@@ -3,6 +3,29 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { easeOutExpo } from "./motion";
 
+// Twoslash-style inline type popup (CSS-only, always visible)
+function TypePopup({
+  children,
+  label,
+  type,
+}: {
+  children: React.ReactNode;
+  label: string;
+  type: string;
+}) {
+  return (
+    <span className="twoslash-hover relative inline">
+      <span className="twoslash-target">{children}</span>
+      <span className="twoslash-popup absolute left-1/2 top-full z-10 mt-3 block w-max -translate-x-1/2 rounded-xl border border-border bg-fd-popover px-4 py-2 font-mono text-sm shadow-xl">
+        <span className="twoslash-arrow absolute -top-[6px] left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-border bg-fd-popover" />
+        <span className="text-purple-400">{label}</span>
+        <span className="text-fd-popover-foreground">: </span>
+        <span className="text-blue-400">{type}</span>
+      </span>
+    </span>
+  );
+}
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -307,29 +330,22 @@ export function TypeSafetyDemo() {
             </div>
 
             {/* Solution 3: Full type inference */}
-            <div className="rounded-xl bg-muted/50 p-4">
+            <div className="rounded-xl bg-muted/50 p-4 pb-16">
               <div className="mb-2 flex items-center gap-2 text-xs font-medium text-green-500">
                 <Check className="h-3.5 w-3.5" />
                 onChange receives the exact type
               </div>
-              <pre className="overflow-x-auto font-mono text-xs leading-relaxed">
+              <pre className="font-mono text-xs leading-relaxed">
                 <code>
                   <span className="text-purple-400">onChange</span>
                   <span className="text-foreground">=</span>
                   <span className="text-foreground">{"{"}(</span>
-                  <span className="text-orange-400">value</span>
+                  <TypePopup label="value" type="number">
+                    <span className="text-orange-400">value</span>
+                  </TypePopup>
                   <span className="text-foreground">) ={"> {"}</span>
                   {"\n"}
-                  <span className="text-muted-foreground">
-                    {"  // value: 1 | 2 (literal number type!)\n"}
-                  </span>
-                  <span className="text-foreground">{"  "}</span>
-                  <span className="text-yellow-400">fetchUser</span>
-                  <span className="text-foreground">(value);</span>
-                  <span className="text-muted-foreground">
-                    {" "}
-                    {"// Type safe!"}
-                  </span>
+                  <span className="text-foreground">{"  "}...</span>
                   {"\n"}
                   <span className="text-foreground">{"}}"}</span>
                 </code>

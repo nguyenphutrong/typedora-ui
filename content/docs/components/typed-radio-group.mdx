@@ -43,7 +43,7 @@ bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-radio-group
 
 ### Basic Usage
 
-```tsx
+```tsx twoslash
 import { TypedRadioGroup } from "@/components/typed-radio-group";
 
 <TypedRadioGroup
@@ -53,14 +53,14 @@ import { TypedRadioGroup } from "@/components/typed-radio-group";
     { label: "Orange", value: "orange" },
   ]}
   onChange={(value) => {
-    // value: string
+    //       ^?
   }}
 />
 ```
 
 ### Number Values
 
-```tsx
+```tsx twoslash
 import { TypedRadioGroup } from "@/components/typed-radio-group";
 
 <TypedRadioGroup
@@ -70,14 +70,14 @@ import { TypedRadioGroup } from "@/components/typed-radio-group";
     { label: "Large", value: 3 },
   ]}
   onChange={(value) => {
-    // value: number
+    //       ^?
   }}
 />
 ```
 
 ### Boolean Values
 
-```tsx
+```tsx twoslash
 import { TypedRadioGroup } from "@/components/typed-radio-group";
 
 <TypedRadioGroup
@@ -86,14 +86,14 @@ import { TypedRadioGroup } from "@/components/typed-radio-group";
     { label: "No", value: false },
   ]}
   onChange={(value) => {
-    // value: boolean
+    //       ^?
   }}
 />
 ```
 
 ### Card Style
 
-```tsx
+```tsx twoslash
 import { CheckIcon } from "lucide-react";
 import { TypedRadioGroup } from "@/components/typed-radio-group";
 import { cn } from "@/lib/utils";
@@ -142,7 +142,7 @@ export function CardStyleRadioGroup() {
 
 By default, `TypedRadioGroup` uses `value` and `label` keys. You can customize this using `valueKey` and `labelKey` props:
 
-```tsx
+```tsx twoslash
 "use client";
 
 import { useState } from "react";
@@ -201,7 +201,7 @@ export function CustomKeysRadioGroup() {
 
 ### Disabled Options
 
-```tsx
+```tsx twoslash
 import { TypedRadioGroup } from "@/components/typed-radio-group";
 
 <TypedRadioGroup
@@ -215,7 +215,7 @@ import { TypedRadioGroup } from "@/components/typed-radio-group";
 
 ### Controlled Component
 
-```tsx
+```tsx twoslash
 import { TypedRadioGroup } from "@/components/typed-radio-group";
 import { useState } from "react";
 
@@ -229,7 +229,7 @@ function ControlledDemo() {
         options={[
           { label: "Apple", value: "apple" },
           { label: "Banana", value: "banana" },
-        ]}
+        ] as const}
         onChange={setValue}
       />
       <p>Selected: {value}</p>

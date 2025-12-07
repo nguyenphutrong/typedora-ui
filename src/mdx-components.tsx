@@ -3,6 +3,8 @@ import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import * as TabsComponents from "fumadocs-ui/components/tabs";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
+import { TypedRadioGroup } from "./components/typed-radio-group";
+import { TypedSelect } from "./components/typed-select";
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
@@ -14,6 +16,8 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
         <Pre>{props.children}</Pre>
       </CodeBlock>
     ),
+    TypedSelect,
+    TypedRadioGroup,
     ...components,
   };
 }

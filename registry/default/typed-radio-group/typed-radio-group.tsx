@@ -1,3 +1,5 @@
+"use client";
+
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { CircleIcon } from "lucide-react";
 import * as React from "react";
@@ -79,40 +81,51 @@ export type RadioGroupRenderProps = {
 };
 
 /**
- * Extract the value type from an option based on the valueKey
+ * Extract the inner option type from options array.
+ */
+type ExtractOption<TOptions> = TOptions extends readonly (infer T)[]
+  ? T
+  : never;
+
+/**
+ * Extract the value type from options based on the valueKey.
  */
 type ExtractOptionValue<
-  TOption,
-  TValueKey extends keyof TOption,
-> = TOption[TValueKey];
+  TOptions,
+  TValueKey extends string,
+> = ExtractOption<TOptions> extends infer O
+  ? O extends Record<string, unknown>
+    ? TValueKey extends keyof O
+      ? O[TValueKey] & {}
+      : never
+    : never
+  : never;
 
 /**
  * Core props for TypedRadioGroup (for documentation).
  * The actual component also accepts all RadioGroup props (className, disabled, etc.)
  */
 export interface TypedRadioGroupBaseProps<
-  TOption extends Record<string, unknown>,
-  TValueKey extends keyof TOption = "value" extends keyof TOption
-    ? "value"
-    : keyof TOption,
-  TLabelKey extends keyof TOption = "label" extends keyof TOption
-    ? "label"
-    : keyof TOption,
+  TOptions extends readonly Record<string, unknown>[],
+  TValueKey extends string = "value",
+  TLabelKey extends string = "label",
 > {
   /** Array of radio options */
-  options: readonly TOption[];
+  options: TOptions;
   /** The key to use for the option value (default: "value") */
   valueKey?: TValueKey;
   /** The key to use for the option label (default: "label") */
   labelKey?: TLabelKey;
   /** Controlled value */
-  value?: ExtractOptionValue<TOption, TValueKey>;
+  value?: ExtractOptionValue<TOptions, TValueKey>;
   /** Default value for uncontrolled usage */
-  defaultValue?: ExtractOptionValue<TOption, TValueKey>;
+  defaultValue?: ExtractOptionValue<TOptions, TValueKey>;
   /** Callback when value changes - receives the typed value */
-  onChange?: (value: ExtractOptionValue<TOption, TValueKey>) => void;
+  onChange?: (value: ExtractOptionValue<TOptions, TValueKey>) => void;
   /** Custom render for each item */
-  renderItem?: (props: RadioItemRenderProps<TOption>) => React.ReactNode;
+  renderItem?: (
+    props: RadioItemRenderProps<ExtractOption<TOptions>>,
+  ) => React.ReactNode;
   /**
    * Custom render for wrapping the items inside RadioGroup.
    * Use this for adding custom elements between items (e.g., dividers).
@@ -135,23 +148,19 @@ export interface TypedRadioGroupBaseProps<
 
 /**
  * Props for the TypedRadioGroup component.
- * @template TOption - The full option type including custom properties
+ * @template TOptions - The options array type
  * @template TValueKey - The key used for the value property (default: "value")
  * @template TLabelKey - The key used for the label property (default: "label")
  */
 export interface TypedRadioGroupProps<
-  TOption extends Record<string, unknown>,
-  TValueKey extends keyof TOption = "value" extends keyof TOption
-    ? "value"
-    : keyof TOption,
-  TLabelKey extends keyof TOption = "label" extends keyof TOption
-    ? "label"
-    : keyof TOption,
+  TOptions extends readonly Record<string, unknown>[],
+  TValueKey extends string = "value",
+  TLabelKey extends string = "label",
 > extends Omit<
       React.ComponentProps<typeof RadioGroup>,
       "value" | "defaultValue" | "onValueChange" | "children" | "onChange"
     >,
-    TypedRadioGroupBaseProps<TOption, TValueKey, TLabelKey> {}
+    TypedRadioGroupBaseProps<TOptions, TValueKey, TLabelKey> {}
 
 // =============================================================================
 // Helpers
@@ -273,13 +282,9 @@ function defaultRenderGroup({
  * ```
  */
 function TypedRadioGroup<
-  TOption extends Record<string, unknown>,
-  TValueKey extends keyof TOption = "value" extends keyof TOption
-    ? "value"
-    : keyof TOption,
-  TLabelKey extends keyof TOption = "label" extends keyof TOption
-    ? "label"
-    : keyof TOption,
+  TOptions extends readonly Record<string, unknown>[],
+  TValueKey extends string = "value",
+  TLabelKey extends string = "label",
 >({
   options,
   valueKey = "value" as TValueKey,
@@ -290,28 +295,36 @@ function TypedRadioGroup<
   renderItem,
   renderGroup = defaultRenderGroup,
   ...props
-}: TypedRadioGroupProps<TOption, TValueKey, TLabelKey>) {
+}: TypedRadioGroupProps<TOptions, TValueKey, TLabelKey>) {
+  // Extract the actual option type for internal use
+  type TOption = ExtractOption<TOptions> & Record<string, unknown>;
+  type TValue = ExtractOptionValue<TOptions, TValueKey>;
+
   // Generate a stable ID for this radio group instance
   const groupId = React.useId();
 
   // Track internal value for uncontrolled mode
-  const [internalValue, setInternalValue] = React.useState<
-    ExtractOptionValue<TOption, TValueKey> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = React.useState<TValue | undefined>(
+    defaultValue,
+  );
 
   // Use controlled value if provided, otherwise use internal state
   const currentValue = value !== undefined ? value : internalValue;
 
   const handleValueChange = (serialized: string) => {
-    const deserialized = deserializeValue(serialized, options, valueKey);
+    const deserialized = deserializeValue(
+      serialized,
+      options as unknown as readonly TOption[],
+      valueKey as keyof TOption,
+    );
 
     // Update internal state for uncontrolled mode
     if (value === undefined) {
-      setInternalValue(deserialized as ExtractOptionValue<TOption, TValueKey>);
+      setInternalValue(deserialized as TValue);
     }
 
     if (onChange) {
-      onChange(deserialized as ExtractOptionValue<TOption, TValueKey>);
+      onChange(deserialized as TValue);
     }
   };
 
@@ -326,12 +339,13 @@ function TypedRadioGroup<
 
   // Use provided renderItem or create default with labelKey
   const actualRenderItem =
-    renderItem ?? createDefaultRenderItem<TOption, TLabelKey>(labelKey);
+    renderItem ??
+    createDefaultRenderItem<TOption, keyof TOption>(labelKey as keyof TOption);
 
   // Render all items
   const renderItems = () => {
-    return options.map((option, index) => {
-      const optionValue = option[valueKey] as RadioValueType;
+    return (options as unknown as readonly TOption[]).map((option, index) => {
+      const optionValue = option[valueKey as keyof TOption] as RadioValueType;
       const serialized = serializeValue(optionValue);
       const isSelected = serializedValue === serialized;
       const itemId = generateItemId(index, groupId);
@@ -340,7 +354,7 @@ function TypedRadioGroup<
       return (
         <React.Fragment key={serialized}>
           {actualRenderItem({
-            option,
+            option: option as ExtractOption<TOptions>,
             isSelected,
             isDisabled,
             itemProps: {
