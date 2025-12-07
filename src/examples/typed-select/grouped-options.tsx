@@ -1,6 +1,6 @@
 import { TypedSelect } from "@/components/typed-select";
 
-function Demo() {
+export function GroupedOptions() {
   return (
     <div>
       <TypedSelect

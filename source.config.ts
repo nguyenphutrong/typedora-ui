@@ -4,6 +4,7 @@ import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { transformerTwoslash } from "fumadocs-twoslash";
 import { createFileSystemTypesCache } from "fumadocs-twoslash/cache-fs";
 import { createGenerator, remarkAutoTypeTable } from "fumadocs-typescript";
+import remarkDirective from "remark-directive";
 import ts from "typescript";
 
 export const docs = defineDocs({
@@ -25,7 +26,7 @@ const parsedConfig = ts.parseJsonConfigFileContent(
 
 export default defineConfig({
   mdxOptions: {
-    remarkPlugins: [[remarkAutoTypeTable, { generator }]],
+    remarkPlugins: [[remarkDirective, remarkAutoTypeTable, { generator }]],
     rehypeCodeOptions: {
       themes: {
         light: "github-light",
