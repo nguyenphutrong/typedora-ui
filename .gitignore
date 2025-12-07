@@ -19,3 +19,6 @@ src/routeTree.gen.ts
 .source
 dist
 .next
+
+# Local Netlify folder
+.netlify

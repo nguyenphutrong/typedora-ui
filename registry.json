@@ -4,11 +4,26 @@
   "homepage": "https://typedora-ui.netlify.app",
   "items": [
     {
+      "name": "typed-utils",
+      "type": "registry:lib",
+      "title": "Typed Utils",
+      "description": "Shared utility types for typed components.",
+      "files": [
+        {
+          "path": "registry/default/lib/typed-utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "typed-select",
       "type": "registry:component",
       "title": "TypedSelect",
       "description": "A headless, type-safe select component with full TypeScript inference and customizable rendering.",
-      "registryDependencies": ["select"],
+      "registryDependencies": [
+        "select",
+        "https://typedora-ui.netlify.app/r/typed-utils.json"
+      ],
       "files": [
         {
           "path": "registry/default/typed-select/typed-select.tsx",
@@ -21,7 +36,10 @@
       "type": "registry:component",
       "title": "TypedRadioGroup",
       "description": "A headless, type-safe radio group component with full TypeScript inference and customizable rendering.",
-      "registryDependencies": ["radio-group"],
+      "registryDependencies": [
+        "radio-group",
+        "https://typedora-ui.netlify.app/r/typed-utils.json"
+      ],
       "files": [
         {
           "path": "registry/default/typed-radio-group/typed-radio-group.tsx",

@@ -3,8 +3,8 @@
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { CircleIcon } from "lucide-react";
 import * as React from "react";
-
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import type { ExtractOption, ExtractOptionValue } from "@/lib/typed-utils";
 
 // =============================================================================
 // Internal Indicator Component (matches shadcn/ui style)
@@ -79,27 +79,6 @@ export type RadioGroupRenderProps = {
   /** Rendered items to be placed inside your custom wrapper */
   children: React.ReactNode;
 };
-
-/**
- * Extract the inner option type from options array.
- */
-type ExtractOption<TOptions> = TOptions extends readonly (infer T)[]
-  ? T
-  : never;
-
-/**
- * Extract the value type from options based on the valueKey.
- */
-type ExtractOptionValue<
-  TOptions,
-  TValueKey extends string,
-> = ExtractOption<TOptions> extends infer O
-  ? O extends Record<string, unknown>
-    ? TValueKey extends keyof O
-      ? O[TValueKey] & {}
-      : never
-    : never
-  : never;
 
 /**
  * Core props for TypedRadioGroup (for documentation).
@@ -354,7 +333,7 @@ function TypedRadioGroup<
       return (
         <React.Fragment key={serialized}>
           {actualRenderItem({
-            option: option as ExtractOption<TOptions>,
+            option,
             isSelected,
             isDisabled,
             itemProps: {

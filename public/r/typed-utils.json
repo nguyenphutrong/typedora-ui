@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "typed-utils",
+  "type": "registry:lib",
+  "title": "Typed Utils",
+  "description": "Shared utility types for typed components.",
+  "files": [
+    {
+      "path": "registry/default/lib/typed-utils.ts",
+      "content": "// =============================================================================\n// Utility Types for Typed Components\n// =============================================================================\n\n/**\n * Extract the inner option type from options array.\n * Handles both flat options and grouped options.\n *\n * @example\n * ```ts\n * type Options = readonly [{ value: \"a\" }, { value: \"b\" }];\n * type Option = ExtractOption<Options>; // { value: \"a\" } | { value: \"b\" }\n *\n * // With grouped options\n * type GroupedOptions = readonly [{ label: \"Group\", options: readonly [{ value: \"a\" }] }];\n * type GroupedOption = ExtractOption<GroupedOptions>; // { value: \"a\" }\n * ```\n */\nexport type ExtractOption<TOptions> = TOptions extends readonly (infer T)[]\n  ? T extends { options: readonly (infer O)[] }\n    ? O\n    : T\n  : never;\n\n/**\n * Extract the value type from options based on the valueKey.\n * Handles both flat options and grouped options.\n *\n * @example\n * ```ts\n * type Options = readonly [{ value: \"apple\" }, { value: \"banana\" }];\n * type Value = ExtractOptionValue<Options, \"value\">; // \"apple\" | \"banana\"\n *\n * // With custom key\n * type CustomOptions = readonly [{ id: 1 }, { id: 2 }];\n * type CustomValue = ExtractOptionValue<CustomOptions, \"id\">; // 1 | 2\n * ```\n */\nexport type ExtractOptionValue<\n  TOptions,\n  TValueKey extends string,\n> = ExtractOption<TOptions> extends infer O\n  ? O extends Record<string, unknown>\n    ? TValueKey extends keyof O\n      ? O[TValueKey] & {}\n      : never\n    : never\n  : never;\n",
+      "type": "registry:lib"
+    }
+  ]
+}

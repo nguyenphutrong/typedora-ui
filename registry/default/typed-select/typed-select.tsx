@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import {
   Select,
   SelectContent,
@@ -11,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { ExtractOption, ExtractOptionValue } from "@/lib/typed-utils";
 
 // =============================================================================
 // Types
@@ -110,31 +110,6 @@ export type SelectContentRenderProps = {
   /** Default content component */
   Content: typeof SelectContent;
 };
-
-/**
- * Extract the inner option type from options array.
- * Handles both flat options and grouped options.
- */
-type ExtractOption<TOptions> = TOptions extends readonly (infer T)[]
-  ? T extends { options: readonly (infer O)[] }
-    ? O
-    : T
-  : never;
-
-/**
- * Extract the value type from options based on the valueKey.
- * Handles both flat options and grouped options.
- */
-type ExtractOptionValue<
-  TOptions,
-  TValueKey extends string,
-> = ExtractOption<TOptions> extends infer O
-  ? O extends Record<string, unknown>
-    ? TValueKey extends keyof O
-      ? O[TValueKey] & {}
-      : never
-    : never
-  : never;
 
 /**
  * Core props for TypedSelect (for documentation).
