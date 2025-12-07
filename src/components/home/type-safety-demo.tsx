@@ -318,7 +318,7 @@ export function TypeSafetyDemo() {
                   <span className="text-green-400">"name"</span>
                   {"\n"}
                   <span className="text-foreground">{"  "}</span>
-                  <span className="text-purple-400">onChange</span>
+                  <span className="text-purple-400">onValueChange</span>
                   <span className="text-foreground">=</span>
                   <span className="text-foreground">
                     {"{"}setUserId{"}"}
@@ -333,11 +333,11 @@ export function TypeSafetyDemo() {
             <div className="rounded-xl bg-muted/50 p-4 pb-16">
               <div className="mb-2 flex items-center gap-2 text-xs font-medium text-green-500">
                 <Check className="h-3.5 w-3.5" />
-                onChange receives the exact type
+                onValueChange receives the exact type
               </div>
               <pre className="font-mono text-xs leading-relaxed">
                 <code>
-                  <span className="text-purple-400">onChange</span>
+                  <span className="text-purple-400">onValueChange</span>
                   <span className="text-foreground">=</span>
                   <span className="text-foreground">{"{"}(</span>
                   <TypePopup label="value" type="number">

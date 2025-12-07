@@ -9,8 +9,8 @@ export function BasicUsage() {
           { label: "Banana", value: "banana" },
           { label: "Orange", value: "orange" },
         ]}
-        onChange={(value) => {
-          //       ^?
+        onValueChange={(value) => {
+          //            ^?
         }}
       />
     </div>

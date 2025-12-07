@@ -24,7 +24,7 @@ export function Controlled() {
         options={users}
         valueKey="id"
         labelKey="name"
-        onChange={setValue}
+        onValueChange={setValue}
       />
       <p>Selected: {value}</p>
     </div>

@@ -11,8 +11,8 @@ export function NumberValues() {
             { label: "Three", value: 3 },
           ] as const
         }
-        onChange={(value) => {
-          //       ^?
+        onValueChange={(value) => {
+          //            ^?
         }}
       />
     </div>

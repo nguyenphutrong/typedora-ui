@@ -28,7 +28,7 @@ export function CustomKeys() {
         valueKey="id"
         labelKey="name"
         value={selectedId}
-        onChange={setSelectedId}
+        onValueChange={setSelectedId}
         renderItem={({ option, itemProps, Item }) => (
           <Item {...itemProps} className="flex flex-col items-start py-2">
             <span className="font-medium">{option.name}</span>

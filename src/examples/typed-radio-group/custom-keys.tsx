@@ -26,7 +26,7 @@ export function CustomKeys() {
         valueKey="id"
         labelKey="name"
         value={selectedId}
-        onChange={setSelectedId}
+        onValueChange={setSelectedId}
         renderItem={({ option, itemProps, Item, Indicator }) => (
           <label
             htmlFor={itemProps.id}

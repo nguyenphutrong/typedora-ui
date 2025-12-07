@@ -8,8 +8,8 @@ export function BooleanValues() {
           { label: "Yes", value: true },
           { label: "No", value: false },
         ]}
-        onChange={(value) => {
-          //       ^?
+        onValueChange={(value) => {
+          //            ^?
         }}
       />
     </div>

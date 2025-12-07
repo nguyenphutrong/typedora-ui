@@ -9,8 +9,8 @@ export function NumberValues() {
           { label: "Medium", value: 2 },
           { label: "Large", value: 3 },
         ]}
-        onChange={(value) => {
-          //       ^?
+        onValueChange={(value) => {
+          //            ^?
         }}
       />
     </div>

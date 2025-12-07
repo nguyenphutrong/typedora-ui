@@ -16,7 +16,7 @@ export function Controlled() {
             { label: "Banana", value: "banana" },
           ] as const
         }
-        onChange={setValue}
+        onValueChange={setValue}
       />
       <p>Selected: {value}</p>
     </div>

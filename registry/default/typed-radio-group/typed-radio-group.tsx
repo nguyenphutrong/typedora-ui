@@ -100,7 +100,7 @@ export interface TypedRadioGroupBaseProps<
   /** Default value for uncontrolled usage */
   defaultValue?: ExtractOptionValue<TOptions, TValueKey>;
   /** Callback when value changes - receives the typed value */
-  onChange?: (value: ExtractOptionValue<TOptions, TValueKey>) => void;
+  onValueChange?: (value: ExtractOptionValue<TOptions, TValueKey>) => void;
   /** Custom render for each item */
   renderItem?: (
     props: RadioItemRenderProps<ExtractOption<TOptions>>,
@@ -137,7 +137,7 @@ export interface TypedRadioGroupProps<
   TLabelKey extends string = "label",
 > extends Omit<
       React.ComponentProps<typeof RadioGroup>,
-      "value" | "defaultValue" | "onValueChange" | "children" | "onChange"
+      "value" | "defaultValue" | "onValueChange" | "children" | "onValueChange"
     >,
     TypedRadioGroupBaseProps<TOptions, TValueKey, TLabelKey> {}
 
@@ -241,7 +241,7 @@ function defaultRenderGroup({
  *       </div>
  *     </label>
  *   )}
- *   onChange={(value) => {
+ *   onValueChange={(value) => {
  *     // value: "apple" | "banana"
  *   }}
  * />
@@ -254,7 +254,7 @@ function defaultRenderGroup({
  *   ] as const}
  *   valueKey="id"
  *   labelKey="name"
- *   onChange={(value) => {
+ *   onValueChange={(value) => {
  *     // value: 1 | 2
  *   }}
  * />
@@ -270,7 +270,7 @@ function TypedRadioGroup<
   labelKey = "label" as TLabelKey,
   value,
   defaultValue,
-  onChange,
+  onValueChange,
   renderItem,
   renderGroup = defaultRenderGroup,
   ...props
@@ -302,8 +302,8 @@ function TypedRadioGroup<
       setInternalValue(deserialized as TValue);
     }
 
-    if (onChange) {
-      onChange(deserialized as TValue);
+    if (onValueChange) {
+      onValueChange(deserialized as TValue);
     }
   };
 

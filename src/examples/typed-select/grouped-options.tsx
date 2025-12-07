@@ -22,8 +22,8 @@ export function GroupedOptions() {
             },
           ] as const
         }
-        onChange={(value) => {
-          //       ^?
+        onValueChange={(value) => {
+          //            ^?
         }}
       />
     </div>

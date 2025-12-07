@@ -133,7 +133,7 @@ export interface TypedSelectBaseProps<
   /** Default value for uncontrolled usage */
   defaultValue?: ExtractOptionValue<TOptions, TValueKey>;
   /** Callback when value changes - receives the typed value */
-  onChange?: (value: ExtractOptionValue<TOptions, TValueKey>) => void;
+  onValueChange?: (value: ExtractOptionValue<TOptions, TValueKey>) => void;
   /** Placeholder text (passed to renderTrigger) */
   placeholder?: string;
   /** Custom render for trigger */
@@ -313,7 +313,7 @@ function defaultRenderContent({
  *   renderContent={({ children, Content }) => (
  *     <Content>{children}</Content>
  *   )}
- *   onChange={(value) => {
+ *   onValueChange={(value) => {
  *     // value: "apple" | "banana"
  *   }}
  * />
@@ -327,7 +327,7 @@ function defaultRenderContent({
  *   ] as const}
  *   valueKey="id"
  *   labelKey="name"
- *   onChange={(value) => {
+ *   onValueChange={(value) => {
  *     // value: 1 | 2
  *   }}
  * />
@@ -345,7 +345,7 @@ function TypedSelect<
   labelKey = "label" as TLabelKey,
   value,
   defaultValue,
-  onChange,
+  onValueChange,
   placeholder = "Select an option",
   open: controlledOpen,
   onOpenChange,
@@ -389,8 +389,8 @@ function TypedSelect<
       setInternalValue(deserialized as TValue);
     }
 
-    if (onChange) {
-      onChange(deserialized as TValue);
+    if (onValueChange) {
+      onValueChange(deserialized as TValue);
     }
   };
 

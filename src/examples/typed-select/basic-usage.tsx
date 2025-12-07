@@ -11,8 +11,8 @@ export function BasicUsage() {
             { label: "Orange", value: "orange" },
           ] as const
         }
-        onChange={(value) => {
-          //       ^?
+        onValueChange={(value) => {
+          //            ^?
         }}
       />
     </div>

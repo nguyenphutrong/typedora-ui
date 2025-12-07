@@ -61,7 +61,7 @@ export function DemoSelect() {
         { label: "Banana", value: "banana" },
         { label: "Orange", value: "orange" },
       ]}
-      onChange={(value) => console.log("Selected:", value)}
+      onValueChange={(value) => console.log("Selected:", value)}
     />
   );
 }
