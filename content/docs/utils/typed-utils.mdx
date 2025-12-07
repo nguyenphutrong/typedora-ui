@@ -1,0 +1,269 @@
+---
+title: Typed Utils
+description: Utility types for extracting option types and values from typed components.
+---
+
+## Introduction
+
+`typed-utils` provides utility types that power the type inference in all Typedora UI components. These types are automatically installed as a dependency when you add any typed component.
+
+**Key features:**
+
+- Extract option types from flat or grouped options arrays
+- Extract value types based on custom value keys
+- Full support for `as const` arrays with literal types
+
+## Installation
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+<Tab value="npm">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-utils.json
+```
+</Tab>
+<Tab value="pnpm">
+```bash
+pnpm dlx shadcn@latest add https://typedora-ui.netlify.app/r/typed-utils.json
+```
+</Tab>
+<Tab value="yarn">
+```bash
+npx shadcn@latest add https://typedora-ui.netlify.app/r/typed-utils.json
+```
+</Tab>
+<Tab value="bun">
+```bash
+bunx --bun shadcn@latest add https://typedora-ui.netlify.app/r/typed-utils.json
+```
+</Tab>
+</Tabs>
+
+<Callout title="Note">
+This package is automatically installed when you add any typed component like `TypedSelect`, `TypedCombobox`, or `TypedRadioGroup`.
+</Callout>
+
+## Usage
+
+### ExtractOption
+
+`ExtractOption` extracts the individual option type from an options array. It handles both flat options and grouped options.
+
+```tsx twoslash
+import type { ExtractOption } from "@/lib/typed-utils";
+
+// Flat options
+const fruits = [
+  { value: "apple", label: "Apple" },
+  { value: "banana", label: "Banana" },
+] as const;
+
+type Fruit = ExtractOption<typeof fruits>;
+//   ^?
+
+
+
+
+// Grouped options
+const groupedFruits = [
+  {
+    label: "Tropical",
+    options: [
+      { value: "mango", label: "Mango" },
+      { value: "pineapple", label: "Pineapple" },
+    ],
+  },
+] as const;
+
+type GroupedFruit = ExtractOption<typeof groupedFruits>;
+//   ^?
+```
+
+### ExtractOptionValue
+
+`ExtractOptionValue` extracts the value type from options based on a specified key. This is useful when you need to type a variable that holds the selected value.
+
+```tsx twoslash
+import type { ExtractOptionValue } from "@/lib/typed-utils";
+
+// With default "value" key
+const fruits = [
+  { value: "apple", label: "Apple" },
+  { value: "banana", label: "Banana" },
+  { value: "orange", label: "Orange" },
+] as const;
+
+type FruitValue = ExtractOptionValue<typeof fruits, "value">;
+//   ^?
+
+
+
+
+// With custom "id" key
+const users = [
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" },
+  { id: 3, name: "Charlie" },
+] as const;
+
+type UserId = ExtractOptionValue<typeof users, "id">;
+//   ^?
+```
+
+### Real-world Example
+
+Here's how you might use these utility types in a real application:
+
+```tsx twoslash
+import { useState } from "react";
+import type { ExtractOptionValue } from "@/lib/typed-utils";
+import { TypedSelect } from "@/components/typed-select";
+
+const statusOptions = [
+  { value: "pending", label: "Pending", color: "yellow" },
+  { value: "approved", label: "Approved", color: "green" },
+  { value: "rejected", label: "Rejected", color: "red" },
+] as const;
+
+// Type-safe state
+type Status = ExtractOptionValue<typeof statusOptions, "value">;
+
+function StatusFilter() {
+  const [status, setStatus] = useState<Status | undefined>();
+
+  // status is typed as "pending" | "approved" | "rejected" | undefined
+
+  return (
+    <TypedSelect
+      options={statusOptions}
+      value={status}
+      onValueChange={setStatus}
+      placeholder="Filter by status"
+    />
+  );
+}
+```
+
+### Using with Grouped Options
+
+Both utility types work seamlessly with grouped options:
+
+```tsx twoslash
+import type { ExtractOption, ExtractOptionValue } from "@/lib/typed-utils";
+
+const countryOptions = [
+  {
+    label: "Asia",
+    options: [
+      { value: "jp", label: "Japan" },
+      { value: "kr", label: "South Korea" },
+      { value: "vn", label: "Vietnam" },
+    ],
+  },
+  {
+    label: "Europe",
+    options: [
+      { value: "de", label: "Germany" },
+      { value: "fr", label: "France" },
+      { value: "uk", label: "United Kingdom" },
+    ],
+  },
+] as const;
+
+// Extracts the individual option (not the group)
+type Country = ExtractOption<typeof countryOptions>;
+//   ^?
+
+
+
+
+// Extracts just the value
+type CountryCode = ExtractOptionValue<typeof countryOptions, "value">;
+//   ^?
+```
+
+## API Reference
+
+### ExtractOption\<TOptions\>
+
+Extracts the inner option type from an options array.
+
+```ts
+type ExtractOption<TOptions> = TOptions extends readonly (infer T)[]
+  ? T extends { options: readonly (infer O)[] }
+    ? O
+    : T
+  : never;
+```
+
+| Parameter | Description |
+| --- | --- |
+| `TOptions` | The options array type (should be `readonly` with `as const`) |
+
+**Returns:** Union type of all option objects in the array.
+
+**Behavior:**
+- For flat options: Returns the option type directly
+- For grouped options: Extracts and returns the inner option type from `options` property
+
+### ExtractOptionValue\<TOptions, TValueKey\>
+
+Extracts the value type from options based on the specified key.
+
+```ts
+type ExtractOptionValue<
+  TOptions,
+  TValueKey extends string,
+> = ExtractOption<TOptions> extends infer O
+  ? O extends Record<string, unknown>
+    ? TValueKey extends keyof O
+      ? O[TValueKey] & {}
+      : never
+    : never
+  : never;
+```
+
+| Parameter | Description |
+| --- | --- |
+| `TOptions` | The options array type (should be `readonly` with `as const`) |
+| `TValueKey` | The key to extract values from (e.g., `"value"`, `"id"`) |
+
+**Returns:** Union type of all values for the specified key.
+
+## Tips
+
+### Always use `as const`
+
+For proper type inference, always use `as const` when defining your options:
+
+```tsx
+// Good - literal types preserved
+const options = [
+  { value: "a", label: "A" },
+  { value: "b", label: "B" },
+] as const;
+
+// Bad - types widened to string
+const options = [
+  { value: "a", label: "A" },
+  { value: "b", label: "B" },
+];
+```
+
+### Define options outside components
+
+Define your options array outside the component to prevent recreation on each render and ensure stable type inference:
+
+```tsx
+// Good - defined outside
+const options = [...] as const;
+
+function MyComponent() {
+  return <TypedSelect options={options} />;
+}
+
+// Avoid - recreated on each render
+function MyComponent() {
+  const options = [...] as const; // recreated
+  return <TypedSelect options={options} />;
+}
+```
