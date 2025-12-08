@@ -5,14 +5,14 @@ export const Route = createFileRoute("/rss.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const baseUrl = new URL(request.url).origin;
+        const baseUrl = `${new URL(request.url).origin}`;
 
         const rssXml = await generateRegistryRssFeed({
           baseUrl,
           rss: {
             title: "@registry",
             description: "Subscribe to @registry updates",
-            link: "https://typedora-ui.netlify.app/",
+            link: "https://typedora-ui.netlify.app",
             pubDateStrategy: "githubLastEdit",
           },
           github: {
@@ -20,6 +20,9 @@ export const Route = createFileRoute("/rss.xml")({
             repo: "typedora-ui",
             token: process.env.GITHUB_TOKEN,
           },
+          blocksUrl: "/docs/blocks",
+          libsUrl: "/docs/libs",
+          componentsUrl: "/docs/components",
         });
 
         if (!rssXml) {
