@@ -16,6 +16,7 @@
         "@tanstack/react-start": "^1.134.12",
         "@tanstack/start-static-server-functions": "^1.134.12",
         "@vercel/og": "^0.8.5",
+        "@wandry/analytics-sdk": "^1.16.0",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
         "fumadocs-core": "^16.2.3",
@@ -742,6 +743,8 @@
     "@vue/compiler-ssr": ["@vue/compiler-ssr@3.5.25", "", { "dependencies": { "@vue/compiler-dom": "3.5.25", "@vue/shared": "3.5.25" } }, "sha512-ritPSKLBcParnsKYi+GNtbdbrIE1mtuFEJ4U1sWeuOMlIziK5GtOL85t5RhsNy4uWIXPgk+OUdpnXiTdzn8o3A=="],
 
     "@vue/shared": ["@vue/shared@3.5.25", "", {}, "sha512-AbOPdQQnAnzs58H2FrrDxYj/TJfmeS2jdfEEhgiKINy+bnOANmVizIEgq1r+C5zsbs6l1CCQxtcj71rwNQ4jWg=="],
+
+    "@wandry/analytics-sdk": ["@wandry/analytics-sdk@1.16.0", "", {}, "sha512-YtXDA2SdG+kHfyvAuRr4UFoTOu2mZTuc1JMhGjJK2p7p3LZgvYIp8ySiSMX0ENnIs3C04K7Jg7N+C75gbmIB5Q=="],
 
     "@whatwg-node/disposablestack": ["@whatwg-node/disposablestack@0.0.6", "", { "dependencies": { "@whatwg-node/promise-helpers": "^1.0.0", "tslib": "^2.6.3" } }, "sha512-LOtTn+JgJvX8WfBVJtF08TGrdjuFzGJc4mkP8EdDI8ADbvO7kiexYep1o8dwnt0okb0jYclCDXF13xU7Ge4zSw=="],
 
